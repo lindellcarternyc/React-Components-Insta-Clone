@@ -18,6 +18,9 @@ const App = () => {
   // This state is the source of truth for the data inside the app. You won't be needing dummyData anymore.
   // To make the search bar work (which is stretch) we'd need another state to hold the search term.
   const [posts, setPosts] = useState(dummyData)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [likedPostIds, setLikedPostIds] = useState([])
+
   const likePost = postId => {
     /*
       This function serves the purpose of increasing the number of likes by one, of the post with a given id.
@@ -31,7 +34,7 @@ const App = () => {
         - otherwise just return the post object unchanged.
      */
     setPosts(posts.map(post => {
-      if (post.id === postId) {
+      if (post.id === postId && likedPostIds.includes(postId) === false) {
         return {
           ...post,
           likes: post.likes + 1
@@ -39,14 +42,31 @@ const App = () => {
       }
       return post
     }))
+    setLikedPostIds([...likedPostIds, postId])
   };
+
+  const getFilteredPosts = () => {
+    const filterTerm = searchTerm.toLowerCase()
+
+    return posts.filter(post => {
+      if (post.username.toLowerCase().includes(filterTerm)) {
+        return true
+      }
+      for (const comment of post.comments) {
+        if (comment.username.toLowerCase().includes(filterTerm)) {
+          return true
+        }
+      }
+      return false
+    })
+  }
 
   return (
     <div className='App'>
       {/* Add SearchBar and Posts here to render them */}
       {/* Check the implementation of each component, to see what props they require, if any! */}
-      <SearchBar />
-      <Posts likePost={likePost} posts={posts} />
+      <SearchBar inputValue={searchTerm} onChange={setSearchTerm} />
+      <Posts likePost={likePost} posts={getFilteredPosts()} />
     </div>
   );
 };
