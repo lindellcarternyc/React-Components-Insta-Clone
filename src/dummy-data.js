@@ -1,3 +1,49 @@
+import { v4 } from 'uuid'
+
+const dummyUsernames = ["philzcoffee", "biancasaurus", "martinseludo", "twitch", "michaelmarzetta", "themexican_leprechaun", "dennis_futbol"]
+
+const randomNum = (high) => {
+    return Math.floor(Math.random() * high)
+}
+const randomLikes = () => {
+    return randomNum(10_000)
+}
+
+const randomChoice = (array) => array[randomNum(array.length)]
+
+const randomUsername = () => {
+    return randomChoice(dummyUsernames)
+}
+
+const createComment = () => {
+    return {
+        text: 'Lorem Ipsum ...',
+        username: randomUsername(),
+        id: v4()
+    }
+}
+
+const createComments = () => {
+    const numComments = randomNum(10)
+    const comments = []
+    for (let i = 0; i < numComments; i++) {
+        comments.push(createComment())
+    }
+    return comments
+}
+
+const createPost = () => {
+    return {
+        id: v4(),
+        username: randomUsername(),
+        thumbnailUrl: 'https://icon2.cleanpng.com/20180320/sqe/kisspng-twitch-computer-icons-streaming-media-youtube-live-tv-twitch-icon-5ab19172461392.001176751521586546287.jpg',
+        imageUrl: 'https://source.unsplash.com/random/398x294.68',
+        timestamp: 'May 2nd 2020, 16:23:55 pm',
+        likes: randomLikes(),
+        comments: createComments()
+    }
+}
+
 const dummyData = [
     {
         id: 1,
@@ -54,6 +100,10 @@ const dummyData = [
             },
         ],
     },
+    createPost(),
+    createPost(),
+    createPost(),
+    createPost()
 ];
 
 export default dummyData;
